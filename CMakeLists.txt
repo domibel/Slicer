@@ -479,7 +479,7 @@ if(${ITK_VERSION_MAJOR} GREATER 3)
     ITKIOJPEG
     ITKIOGDCM
     ITKIOBMP
-    ITKIOLSM
+#    ITKIOLSM
     ITKIOPNG
     ITKIOTIFF
     ITKIOVTK
@@ -491,7 +491,7 @@ if(${ITK_VERSION_MAJOR} GREATER 3)
     ITKIOGIPL
     )
   if(Slicer_BUILD_DICOM_SUPPORT)
-    list(APPEND ITK_IO_MODULES_USED ITKIODCMTK)
+#    list(APPEND ITK_IO_MODULES_USED ITKIODCMTK)
   endif()
   set(Slicer_ITK_COMPONENTS
     ITKAnisotropicSmoothing
@@ -501,7 +501,7 @@ if(${ITK_VERSION_MAJOR} GREATER 3)
     ITKCommon
     ITKConnectedComponents
     ITKCurvatureFlow
-    ITKDeprecated
+#    ITKDeprecated
     ITKDiffusionTensorImage
     ITKDisplacementField
     ITKDistanceMap
@@ -541,7 +541,7 @@ if(${ITK_VERSION_MAJOR} GREATER 3)
     ITKTestKernel
     ITKThresholding
     ITKTransform
-    ITKV3Compatibility
+#    ITKV3Compatibility
     ITKVTK
     #    ITKVtkGlue
     ITKZLIB
