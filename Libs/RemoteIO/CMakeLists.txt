@@ -14,24 +14,11 @@ endif()
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 
-if(${ITK_VERSION_MAJOR} GREATER 3)
-  set(${CMAKE_PROJECT_NAME}_ITK_COMPONENTS
-    ITKCommon
-    ITKIOImageBase
-    )
-  find_package(ITK COMPONENTS ${${CMAKE_PROJECT_NAME}_ITK_COMPONENTS})
-else()
-  find_package(ITK REQUIRED)
-endif()
-if(${ITK_VERSION_MAJOR} GREATER 3)
-  set(ITK_NO_IO_FACTORY_REGISTER_MANAGER 1) # See Libs/ITKFactoryRegistration/CMakeLists.txt
-  list(APPEND ITK_LIBRARIES ITKFactoryRegistration)
-  list(APPEND ITK_INCLUDE_DIRS ${ITKFactoryRegistration_INCLUDE_DIRS})
-endif()
-include(${ITK_USE_FILE})
-
 find_package(CURL REQUIRED)
-include_directories(${CURL_INCLUDE_DIRS})
+
+if(Slicer_USE_PYTHONQT_WITH_OPENSSL)
+  find_package(OpenSSL REQUIRED)
+endif()
 
 # Disable MSVC 8 warnings
 if(WIN32)
@@ -54,6 +41,7 @@ set(include_dirs
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${MRMLCore_INCLUDE_DIRS}
+  ${CURL_INCLUDE_DIRS}
   )
 include_directories(${include_dirs})
 
@@ -84,12 +72,6 @@ endif()
 # --------------------------------------------------------------------------
 set(RemoteIO_SRCS
   vtkHTTPHandler.cxx
-  vtkSRBHandler.cxx
-  vtkXNATHandler.cxx
-  vtkHIDHandler.cxx
-  vtkXNDHandler.cxx
-  vtkHIDTagTable.cxx
-  vtkXNDTagTable.cxx
   )
 
 # --------------------------------------------------------------------------
@@ -104,6 +86,11 @@ set(libs
   ${CURL_LIBRARIES}
   MRMLCore
   )
+if(Slicer_USE_PYTHONQT_WITH_OPENSSL)
+  list(APPEND libs
+    ${OPENSSL_LIBRARIES}
+    )
+endif()
 target_link_libraries(${lib_name} ${libs})
 
 # Apply user-defined properties to the library target.
@@ -148,13 +135,6 @@ if(VTK_WRAP_PYTHON)
     )
   # Export target
   export(TARGETS ${lib_name}Python ${lib_name}PythonD APPEND FILE ${${PROJECT_NAME}_EXPORT_FILE})
-endif()
-
-# --------------------------------------------------------------------------
-# Testing (requires some of the examples)
-# --------------------------------------------------------------------------
-if(BUILD_TESTING)
-  #  add_subdirectory(Testing)
 endif()
 
 # --------------------------------------------------------------------------
